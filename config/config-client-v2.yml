@@ -1,0 +1,5 @@
+server:
+  port: 3001
+
+version:
+  message: 2020724发布第一个版本
