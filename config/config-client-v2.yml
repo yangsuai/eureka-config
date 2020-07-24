@@ -1,5 +1,126 @@
 server:
   port: 3001
 
+spring:
+  application:
+    name: eureka-client-gateway
+  cloud:
+    #gateway配置
+    gateway:
+      #是否启用网关
+      enabled: true
+        #网关路由配置
+        #      routes:
+        #        # ID
+        #        - id: fund
+        #          #转发的uri
+        #          uri: http://localhost:7001
+        #          #断言配置
+        #          predicates:
+        #           #Path断言 路径匹配
+        #            - Path=/r4j/**
+        #before时间之后失效
+        #            - Before=2020-07-22T13:12:41.198+08:00[Asia/Shanghai]
+        #after 时间之后生效
+        #            - After=2020-07-22T13:12:41.198+08:00[Asia/Shanghai]
+        #两个时间点之间生效
+        #            - Between=2020-07-22T13:25:21.198+08:00[Asia/Shanghai],2020-07-22T13:26:51.198+08:00[Asia/Shanghai]
+        #cookie中包含 参数名为cookie_id值为abcd1231的符合正则表达式的值
+        #            - Cookie=cookie_id,abcd.*
+        #请求头中 参数 符合 id:0-9的数字 一个或多歌
+        #            - Header=id,^[0-9]*$
+        #匹配主机名或域名 符合表达式**.host.com:3001,**.myhost.com:3001的规则
+        #            - Host=**.host.com:3001,**.myhost.com:3001
+        #匹配请求方式为GET ,POST
+        #            - Method=GET,POST
+        #必须存在参数id 或存在 id = 0-9 零个或多个数字
+        #            - Query=id,^[0-9]*$
+        #            - Query=id
+        #请求地址符合192.168.31.0/0  -- 192.168.31.0/32范围内的  http://192.168.31.26:3001/user/info/1 这样的地址
+        #            - RemoteAddr=192.168.31.0/0,192.168.31.0/32
+        #            - Weight=fund-group-name,80
+        #按权重进行分配
+        #        - id: fund2
+        #          uri: http://localhost:7001
+        #          predicates:
+        #            - Path=/r4j/**
+        #            - Weight=fund-group-name,20
+        #          filters:
+        #添加请求头过滤器,添加请求头参数
+        #            - AddRequestHeader=id,1
+        #添加请求参数过滤器,添加请求参数
+        #            - AddRequestParameter=id,1
+        #添加响应头过滤器,添加响应头参数
+        #            - AddResponseHeader=token,a123456
+        #--------------------------------
+        #添加重试过滤器,添加重试次数
+        #过滤工厂名称
+        #            - name: Retry
+        #配置参数  RetryConfig 的配置
+        #              args:
+        #重试次数 默认为3次
+        #                retries: 2
+        #对应HTTP请求的方法,默认值包含GET
+        #                methods: GET,POST,PUT
+        #状态限制
+        #                statuses: INTERNAL_SERVER_ERROR,BAD_REQUEST
+        #系列限制
+        #                series: SERVER_ERROR
+        #----------------------------------------------
+        #Hystrix过滤工程 降级配置
+        #            - name: Hystrix
+        #              args:   #参数
+        #                name: hystrix-cmd #命令名
+        #                fallbackUri: forward:/gateway/fallback #降级服务请求路径
+        #----------------------------------------------
+        #            RequestRateLimiter限速器 使用redis进行限速
+        #            - name: RequestRateLimiter  #过滤器名称
+        #              args:   #参数
+        #                #每秒发放的命令数量
+        #                redis-rate-limiter.replenishRate: 10
+        #                #令牌桶容量
+        #                redis-rate-limiter.burstCapacity: 20
+        #                #配置KeyResolver,产生独立的令牌桶
+        #                key-resolver: "#{@pathKeyResolver}"
+        #----------------------------------------------
+        #URI的前缀 进行删除1个
+        #            -StripPrefix=1
+        #----------------------------------------------
+        #重写URI路径的逻辑
+        #            - RewritePath=/u/(?<segment>.*),/$\{segment}
+        #----------------------------------------------
+      #设置状态(setStatus)过滤器工厂设置状态
+  #            - SetStatus=BAD_REQUEST
+
+  #RequestRateLimiter 所使用的redis配置
+#  redis:
+#    host: localhost
+#    password: 123456
+#    lettuce:
+#      pool:
+#        #最大活动时间
+#        max-active: 20
+#        #最大等待时间
+#        max-wait: 2000
+#        #最小空闲数
+#        min-idle: 10
+#        #最大空闲数
+#        max-idle: 15
+#------------------------------------------------------------------------------------
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:5001/eureka/
+
+management:
+  endpoints:
+    web:
+      #暴露站点
+      exposure:
+        #暴露网关
+        include: gateway
+
+
 version:
   message: 2020724发布第一个版本
